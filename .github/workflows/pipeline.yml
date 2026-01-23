@@ -92,4 +92,4 @@ jobs:
     - name: Terraform plan
       working-directory: iac
       run: |
-        terraform plan -var-file="conf/dev.tfvars"
+        terraform plan -input=false -var-file="conf/dev.tfvars"
