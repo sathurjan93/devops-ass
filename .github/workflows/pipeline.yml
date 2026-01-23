@@ -87,4 +87,4 @@ jobs:
     - name: Terraform plan
       run: |
         cd iac
-        terraform plan -var-file="conf/dev.tfvars"
+        terraform plan -var-file="iac/conf/dev.tfvars"
