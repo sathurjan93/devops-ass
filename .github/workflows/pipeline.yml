@@ -119,6 +119,7 @@ jobs:
         terraform apply -auto-approve plan.tfplan
 
     - name: Get Cloud Run URL
+      working-directory: iac
       id: cloudrun_service_url
       run: |
         URL=$(terraform output -raw cloudrun_service_url)
