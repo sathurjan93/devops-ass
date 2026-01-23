@@ -11,6 +11,6 @@ output "service_account_email" {
 }
 
 output "cloudrun_service_url" {
-  value = google_cloud_run_v2_service.service.uri
+  value       = google_cloud_run_v2_service.service.uri
   description = "The public endpoint URL of the Cloud Run service"
 }

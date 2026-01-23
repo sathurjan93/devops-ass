@@ -74,10 +74,10 @@ jobs:
         cd iac
         terraform fmt 
 
-    # - name: Terraform init
-    #   run: |
-    #     cd iac
-    #     terraform init -backend=false
+    - name: Terraform init
+      run: |
+        cd iac
+        terraform init
 
     - name: Terraform validate
       run: |
