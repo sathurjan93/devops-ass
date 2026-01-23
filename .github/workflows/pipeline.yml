@@ -75,21 +75,21 @@ jobs:
       uses: hashicorp/setup-terraform@v3
 
     - name: Terraform fmt
+      working-directory: iac
       run: |
-        cd iac
         terraform fmt 
 
     - name: Terraform init
+      working-directory: iac
       run: |
-        cd iac
         terraform init
 
     - name: Terraform validate
+      working-directory: iac
       run: |
-        cd iac
         terraform validate
 
     - name: Terraform plan
+      working-directory: iac
       run: |
-        cd iac
-        terraform plan -var-file="./conf/dev.tfvars"
+        terraform plan -var-file="conf/dev.tfvars"
