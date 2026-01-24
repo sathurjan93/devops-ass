@@ -62,11 +62,11 @@ The system architecture is simple and fully cloud-native:
 ```bash
 git clone https://github.com/username/project.git
 cd project
-
+```
 2. **Install Python dependencies**
 ```bash
 pip install -r requirements.txt
-
+```
 3. Run the app locally
 python app.py
 
