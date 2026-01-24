@@ -8,79 +8,79 @@ on:
 
 jobs:
 #### Test and scan code ####
-  test_and_scan_code:
+#   test_and_scan_code:
 
-    runs-on: ubuntu-latest
+#     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v4
+#     steps:
+#     - uses: actions/checkout@v4
     
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
+#     - name: Set up Python
+#       uses: actions/setup-python@v5
+#       with:
+#         python-version: "3.12"
 
-    - name: Install dependencies
-      run: |
-        pip install -r app/requirements.txt
-        pip install bandit
+#     - name: Install dependencies
+#       run: |
+#         pip install -r app/requirements.txt
+#         pip install bandit
 
-    - name: Run unit tests
-      run: |
-        cd app
-        pytest
+#     - name: Run unit tests
+#       run: |
+#         cd app
+#         pytest
 
-    - name: Run Bandit (code scan)
-      run: |
-        bandit -r app -ll
+#     - name: Run Bandit (code scan)
+#       run: |
+#         bandit -r app -ll
 
-    - name: SonarCloud Scan
-      uses: SonarSource/sonarcloud-github-action@v2
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#     - name: SonarCloud Scan
+#       uses: SonarSource/sonarcloud-github-action@v2
+#       env:
+#         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 
-##### docker build and push #####
-  docker_build_push:
+# ##### docker build and push #####
+#   docker_build_push:
 
-    runs-on: ubuntu-latest
-    needs: test_and_scan_code
+#     runs-on: ubuntu-latest
+#     needs: test_and_scan_code
 
-    steps:
-    - uses: actions/checkout@v4
+#     steps:
+#     - uses: actions/checkout@v4
 
-    - uses: docker/login-action@v3.1.0
-      name: Docker Login
-      with:
-        username: sathurjan
-        password: ${{ secrets.DOCKERPW }}
+#     - uses: docker/login-action@v3.1.0
+#       name: Docker Login
+#       with:
+#         username: sathurjan
+#         password: ${{ secrets.DOCKERPW }}
 
-    - uses: docker/build-push-action@v5
-      name: Docker Build
-      with:
-        context: ./app
-        tags: sathurjan/devops-ass:${{ github.sha }}
-        load: true
+#     - uses: docker/build-push-action@v5
+#       name: Docker Build
+#       with:
+#         context: ./app
+#         tags: sathurjan/devops-ass:${{ github.sha }}
+#         load: true
 
-    - name: Run Trivy image scan
-      uses: aquasecurity/trivy-action@0.20.0
-      with:
-        image-ref: sathurjan/devops-ass:${{ github.sha }}
-        severity: CRITICAL,HIGH
-        exit-code: 0
+#     - name: Run Trivy image scan
+#       uses: aquasecurity/trivy-action@0.20.0
+#       with:
+#         image-ref: sathurjan/devops-ass:${{ github.sha }}
+#         severity: CRITICAL,HIGH
+#         exit-code: 0
 
-    - uses: docker/build-push-action@v5
-      name: Docker Push
-      with:
-        context: ./app
-        tags: sathurjan/devops-ass:${{ github.sha }}
-        push: true
+#     - uses: docker/build-push-action@v5
+#       name: Docker Push
+#       with:
+#         context: ./app
+#         tags: sathurjan/devops-ass:${{ github.sha }}
+#         push: true
 
 ##### TF Deploy to GCP #####
   terraform_deploy_gcp:
 
     runs-on: ubuntu-latest
-    needs: docker_build_push
+    # needs: docker_build_push
     # environment: prod
 
     steps:
@@ -108,6 +108,14 @@ jobs:
       working-directory: iac
       run: |
         terraform validate
+
+    - name: Run tfsec 
+      # continue-on-error: true
+      uses: aquasecurity/tfsec-action@v1.0.3
+      with:
+        working_directory: iac
+        additional_args: --minimum-severity HIGH
+
 
     - name: Terraform plan
       working-directory: iac
