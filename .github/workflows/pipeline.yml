@@ -114,7 +114,7 @@ jobs:
       uses: aquasecurity/tfsec-action@v1.0.3
       with:
         working_directory: iac
-        additional_args: "--minimum-severity HIGH --quiet"
+        additional_args: --minimum-severity HIGH
 
     - name: Terraform plan
       working-directory: iac
