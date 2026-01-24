@@ -81,7 +81,7 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: docker_build_push
-    environment: prod
+    # environment: prod
 
     steps:
     - uses: actions/checkout@v4
