@@ -8,7 +8,7 @@ on:
 
 jobs:
 #### Test and scan code ####
-  test_scan_code:
+  test_and_scan_code:
 
     runs-on: ubuntu-latest
 
@@ -40,11 +40,11 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 
-##### docker build and deploy #####
-  docker_build_and_deploy:
+##### docker build and push #####
+  docker_build_push:
 
     runs-on: ubuntu-latest
-    needs: test_scan_code
+    needs: test_and_scan_code
 
     steps:
     - uses: actions/checkout@v4
@@ -76,11 +76,12 @@ jobs:
         tags: sathurjan/devops-ass:${{ github.sha }}
         push: true
 
-##### Deploy to GCP #####
-  deploy_to_gcp:
+##### TF Deploy to GCP #####
+  terraform_deploy_gcp:
 
     runs-on: ubuntu-latest
-    needs: docker_build_and_deploy
+    needs: docker_build_push
+    environment: prod
 
     steps:
     - uses: actions/checkout@v4
