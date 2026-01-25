@@ -121,10 +121,10 @@ jobs:
       run: |
         terraform plan -out="plan.tfplan" -lock=false
 
-    - name: Terraform apply
-      working-directory: iac
-      run: |
-        terraform apply -auto-approve plan.tfplan
+    # - name: Terraform apply
+    #   working-directory: iac
+    #   run: |
+    #     terraform apply -auto-approve plan.tfplan
 
     - name: Get Cloud Run URL
       working-directory: iac
