@@ -125,10 +125,17 @@ jobs:
         -out="plan.tfplan" \
         -lock=false
 
-    - name: Terraform apply
+    # - name: Terraform apply
+    #   working-directory: iac
+    #   run: |
+    #     terraform apply -auto-approve plan.tfplan
+
+    - name: Terraform destroy
       working-directory: iac
       run: |
-        terraform apply -auto-approve plan.tfplan
+        terraform destroy -auto-approve \
+          -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
+          -var="image_url=sathurjan/devops-ass:${{ github.sha }}"
 
     - name: Get Cloud Run URL
       working-directory: iac
